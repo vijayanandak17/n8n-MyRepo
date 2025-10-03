@@ -1,0 +1,210 @@
+{
+  "name": "PDF Summarization",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {
+          "download": true
+        }
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -432,
+        0
+      ],
+      "id": "fef35f87-823c-4c1a-8f73-292397650503",
+      "name": "Telegram Trigger",
+      "webhookId": "74016078-8444-45a7-8aa1-8f97616b6c88",
+      "credentials": {
+        "telegramApi": {
+          "id": "k7B9H3YvdGZKkuDR",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        -160,
+        0
+      ],
+      "id": "23787370-532d-4a2a-9b7e-6d876a1a3366",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "You are an expert in summarizing the PDF. Just give highlighted points. important topics in half page",
+              "role": "system"
+            },
+            {
+              "content": "=Summarize the below input text {{ $json.text }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        80,
+        0
+      ],
+      "id": "ce118904-20ce-4d49-89d4-49be8eca01ca",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "ReBbz3Dj85A9IIOr",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+        "text": "={{ $json.message.content }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        432,
+        0
+      ],
+      "id": "f3baee5c-eec3-44b1-a4b4-acb58caaff39",
+      "name": "Send a text message",
+      "webhookId": "ed7c3663-d734-4efd-bb04-85a932a7ad07",
+      "credentials": {
+        "telegramApi": {
+          "id": "wFk4vQ4Pyq6fzebk",
+          "name": "vijayanandak17"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Upload PDF in Telegram\n**Set Download Image/File ON**",
+        "height": 272,
+        "width": 304
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -528,
+        -96
+      ],
+      "typeVersion": 1,
+      "id": "7322154a-5b70-4e65-98c6-58b76e766a29",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Extract from PDF",
+        "height": 272,
+        "width": 224,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -208,
+        -96
+      ],
+      "typeVersion": 1,
+      "id": "fca45443-1821-4f70-b6d9-c33cc33f1e29",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## System prompt to pick only key Highlights",
+        "height": 272,
+        "width": 304,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        32,
+        -96
+      ],
+      "typeVersion": 1,
+      "id": "816ab621-0534-4cfd-8b79-e6652550751e",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Final Response on Telegram",
+        "height": 272,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        352,
+        -96
+      ],
+      "typeVersion": 1,
+      "id": "247c1ef3-d3ad-4161-8027-2230d323c209",
+      "name": "Sticky Note3"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "02115098-526b-4f18-8ab5-656da89f9658",
+  "meta": {
+    "instanceId": "115e390902a9688868052192407aa9ae130fbf662385cd2ab51971daa45a5014"
+  },
+  "id": "CqZaMQKpzv7BcKsq",
+  "tags": []
+}
