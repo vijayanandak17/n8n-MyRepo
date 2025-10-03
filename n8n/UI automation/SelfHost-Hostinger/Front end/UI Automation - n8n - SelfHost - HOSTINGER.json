@@ -1,0 +1,246 @@
+{
+  "name": "UI Automation - n8n - SelfHost - HOSTINGER",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "seconds",
+              "secondsInterval": 5
+            },
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        896,
+        16
+      ],
+      "id": "78b349e2-6a02-4743-8a0a-4e523ba68336",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "078a1477-8db6-48ab-ae45-4d7f5cdc8fa1",
+              "name": "MyDateTime",
+              "value": "={{ new Date().toLocaleString('en-GB').replace(/[^0-9]/g, '').replace(/(\\d{8})(\\d{6}).*/, '$1-$2') }}\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1120,
+        16
+      ],
+      "id": "2157fff7-e58e-4a6a-b5e6-bbf057f88edd",
+      "name": "Date & Time"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:5000/write-text",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "text",
+              "value": "={{ $json.text }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1696,
+        16
+      ],
+      "id": "43d9c2c3-0aff-470c-aa43-d50231b93b7c",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "Search for random celebrity born in August and give only name as output. Ex: \"Vijayanand\"",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        1344,
+        16
+      ],
+      "id": "7b38982e-c0d4-4f4b-a4ff-306d2184ece1",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1424,
+        240
+      ],
+      "id": "e8b0722b-22af-4621-ab7a-2d2d89201bf2",
+      "name": "MyOpenn8n API",
+      "credentials": {
+        "openAiApi": {
+          "id": "ReBbz3Dj85A9IIOr",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Scheduler - 30 secs",
+        "height": 224
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        800,
+        -64
+      ],
+      "typeVersion": 1,
+      "id": "89e69c7f-1fc6-4e8c-88d1-6cefd3b5ce63",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Set node: Date & Time",
+        "height": 224,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1056,
+        -64
+      ],
+      "typeVersion": 1,
+      "id": "212104fb-0397-41e6-a652-06ae6e1026a4",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Random Celebrity born in the month",
+        "height": 224,
+        "width": 288,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1312,
+        -64
+      ],
+      "typeVersion": 1,
+      "id": "6e15137a-8eaf-4c20-9196-542a08d1020f",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Open Notepad, Append in .txt file",
+        "height": 224,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1616,
+        -64
+      ],
+      "typeVersion": 1,
+      "id": "eac8270b-c478-46d3-a888-9338970cd302",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## UI Automation - n8n - SelfHost - HOSTINGER",
+        "height": 496,
+        "width": 1152,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        768,
+        -144
+      ],
+      "typeVersion": 1,
+      "id": "e376009b-bb35-4cad-b97b-dc9df48d2e3f",
+      "name": "Sticky Note4"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Date & Time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Date & Time": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MyOpenn8n API": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "e0466b41-ce29-4b42-b374-a0eeeb7a4d53",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "115e390902a9688868052192407aa9ae130fbf662385cd2ab51971daa45a5014"
+  },
+  "id": "dMv0B18qwAKgdrys",
+  "tags": []
+}

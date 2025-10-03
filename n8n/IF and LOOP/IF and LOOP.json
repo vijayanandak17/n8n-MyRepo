@@ -1,0 +1,258 @@
+{
+  "name": "IF and LOOP",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -944,
+        48
+      ],
+      "id": "a08a1cd5-d407-467c-b732-7d422990724e",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f4b35d93-2eac-4902-9cf6-5f2a63d8c863",
+              "name": "Users",
+              "value": "[{\"name\" : \"Vijay\", \"age\" : 14, \"city\" : \"Chennai\"},{\"name\" : \"Meera\", \"age\" : 50, \"city\" : \"Madurai\"},{\"name\" : \"Tom\", \"age\" : 29, \"city\" : \"London\"},{\"name\" : \"Cathy\", \"age\" : 39, \"city\" : \"Paris\"},{\"name\" : \"Goving\", \"age\" : 19, \"city\" : \"salem\"},{\"name\" : \"Moorty\", \"age\" : 23, \"city\" : \"Padi\"}]",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -720,
+        48
+      ],
+      "id": "558fd1a2-adb5-48c4-bb50-b4518328ac85",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "jsCode": "// n8n Code Node: Split \"Users\" array into separate items dynamically\n\n// Get the input data (n8n always passes data as array of items)\nconst items = $input.all();\n\n// Initialize an empty array for output\nlet output = [];\n\n// Loop through all incoming items (usually 1)\nfor (const item of items) {\n  // Extract the Users array safely\n  const usersArray = item.json.Users || [];\n\n  // Loop through each user object\n  for (const user of usersArray) {\n    // Push each user as a new item with its own json\n    output.push({\n      json: user\n    });\n  }\n}\n\n// Return the output array so each user becomes a new item\nreturn output;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -496,
+        48
+      ],
+      "id": "48222810-9dd5-4c46-9444-3ca209f5ab19",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -272,
+        48
+      ],
+      "id": "4ed353f7-b280-4bca-ab53-f97f36b46319",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a6933360-b33b-4dc1-88c7-278dfe8e71cc",
+              "name": "Message",
+              "value": "Old people",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        176,
+        -112
+      ],
+      "id": "aaf78aa6-356e-4c44-9e7b-19b233a555d0",
+      "name": "Old people"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f16bf247-b8a0-4f29-addc-2783de04cd0f",
+              "leftValue": "={{ $json.age }}",
+              "rightValue": 30,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -48,
+        -176
+      ],
+      "id": "83639fd5-d5ba-4e54-a665-0e86abf88424",
+      "name": "Young People"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6b9030f5-72d3-4053-a421-334f0929b3fe",
+              "name": "Message2",
+              "value": "They are young people",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        176,
+        96
+      ],
+      "id": "4cf4f522-12f8-4e15-8138-ea39715e2902",
+      "name": "Young People2"
+    },
+    {
+      "parameters": {
+        "content": "## If and Loop demo\n**Using Array** in this example [Exercise 1](https://docs.n8n.io/workflows/sticky-notes/)",
+        "height": 400,
+        "width": 464,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -368,
+        -208
+      ],
+      "typeVersion": 1,
+      "id": "1d86d5a5-9b2d-42c8-a2d8-80946d602bf9",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Young People",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Old people": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Young People": {
+      "main": [
+        [
+          {
+            "node": "Old people",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Young People2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Young People2": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "556b6180-58c0-4d0c-8b8b-31fcb737f24b",
+  "meta": {
+    "instanceId": "356c662d17923f9820d7115a006658582fab18aec193328bd2c8e8f9a8aa3751"
+  },
+  "id": "pIr9AeBOzIplgvjD",
+  "tags": []
+}

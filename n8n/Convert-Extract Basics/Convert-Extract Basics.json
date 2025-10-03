@@ -1,0 +1,105 @@
+{
+  "name": "Convert-Extract Basics",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        -64
+      ],
+      "id": "9ae7e2dc-5052-480c-a923-0901507938fc",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "toJson",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        128,
+        -64
+      ],
+      "id": "87b143a6-b01f-4c70-8ed2-686f5dd2a736",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"nodes\": [\n    {\n      \"id\": \"1\",\n      \"name\": \"Set Multiple Customers\",\n      \"type\": \"n8n-nodes-base.set\",\n      \"typeVersion\": 2,\n      \"position\": [450, 300],\n      \"parameters\": {\n        \"keepOnlySet\": true,\n        \"options\": {},\n        \"values\": {}\n      }\n    }\n  ],\n  \"connections\": {},\n  \"pinData\": {\n    \"Set Multiple Customers\": [\n      {\n        \"json\": {\n          \"customer_id\": 1001,\n          \"name\": \"John Doe\",\n          \"email\": \"john.doe@example.com\",\n          \"city\": \"New York\",\n          \"country\": \"USA\",\n          \"is_active\": true\n        }\n      },\n      {\n        \"json\": {\n          \"customer_id\": 1002,\n          \"name\": \"Jane Smith\",\n          \"email\": \"jane.smith@example.com\",\n          \"city\": \"Los Angeles\",\n          \"country\": \"USA\",\n          \"is_active\": false\n        }\n      },\n      {\n        \"json\": {\n          \"customer_id\": 1003,\n          \"name\": \"Arun Kumar\",\n          \"email\": \"arun.kumar@example.com\",\n          \"city\": \"Chennai\",\n          \"country\": \"India\",\n          \"is_active\": true\n        }\n      },\n      {\n        \"json\": {\n          \"customer_id\": 1004,\n          \"name\": \"Meera Patel\",\n          \"email\": \"meera.patel@example.com\",\n          \"city\": \"Mumbai\",\n          \"country\": \"India\",\n          \"is_active\": true\n        }\n      }\n    ]\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -96,
+        -64
+      ],
+      "id": "ec8f6e7f-f12b-44f5-bb48-8be3f866a64b",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "fromJson",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        352,
+        -64
+      ],
+      "id": "fc60e258-a290-4f7b-ac69-8ab5f4996b85",
+      "name": "Extract from File"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "823202a4-dbd2-4c74-82d3-7b8115acf1e7",
+  "meta": {
+    "instanceId": "115e390902a9688868052192407aa9ae130fbf662385cd2ab51971daa45a5014"
+  },
+  "id": "Nu8GGzntPb7VGYR3",
+  "tags": []
+}

@@ -1,0 +1,255 @@
+{
+  "name": "Gsheets Automation - Sentiment",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -448,
+        -96
+      ],
+      "id": "150611de-bf7d-48e9-b618-c14b91b066d0",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "10kyVk12zzakGYg4jBgN6QJJLMtvtYsbmOIyzZnFLAUs",
+          "mode": "list",
+          "cachedResultName": "Customer Review - Sentiment",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/10kyVk12zzakGYg4jBgN6QJJLMtvtYsbmOIyzZnFLAUs/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/10kyVk12zzakGYg4jBgN6QJJLMtvtYsbmOIyzZnFLAUs/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -240,
+        -96
+      ],
+      "id": "47a309ee-8100-4e8f-a7f3-f12192b6afc9",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "7hQs2Lj2WxixIUQQ",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Identify the sentiment of the customer based on the feedback {{ $json.Review }}"
+            },
+            {
+              "content": "You are an expert in analyzing the customer review feedback and identifying the sentiment of the customer. Give output as only one word as of the below:\n\"Positive\", \"Negative\",\"Neutral\"",
+              "role": "system"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -32,
+        -96
+      ],
+      "id": "bf765cae-56ea-4eb9-8010-5c0d1a6181ed",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "ReBbz3Dj85A9IIOr",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "10kyVk12zzakGYg4jBgN6QJJLMtvtYsbmOIyzZnFLAUs",
+          "mode": "list",
+          "cachedResultName": "Customer Review - Sentiment",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/10kyVk12zzakGYg4jBgN6QJJLMtvtYsbmOIyzZnFLAUs/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/10kyVk12zzakGYg4jBgN6QJJLMtvtYsbmOIyzZnFLAUs/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $('Get row(s) in sheet').item.json.Name }}",
+            "Review": "={{ $('Get row(s) in sheet').item.json.Review }}",
+            "Sentiment analysis": "={{ $json.message.content }}"
+          },
+          "matchingColumns": [
+            "Name"
+          ],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Review",
+              "displayName": "Review",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Sentiment analysis",
+              "displayName": "Sentiment analysis",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        352,
+        -96
+      ],
+      "id": "eb8c56da-7e5d-451f-a0e9-75e56b68f120",
+      "name": "Append or update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "7hQs2Lj2WxixIUQQ",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Get Customer Reviews",
+        "height": 272
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -304,
+        -192
+      ],
+      "typeVersion": 1,
+      "id": "fb53dee0-c321-41df-935a-534eff0b9c17",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Identify Sentiment (P/N/N)\n",
+        "height": 272,
+        "width": 272,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -48,
+        -192
+      ],
+      "typeVersion": 1,
+      "id": "72d99414-afcc-4fc6-9c58-ba48c2413c6b",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Update GSheet \n*in Google Drive (No Excel)",
+        "height": 272,
+        "width": 288,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        240,
+        -192
+      ],
+      "typeVersion": 1,
+      "id": "6d3a3444-efb9-481e-b133-0d0d9c25e361",
+      "name": "Sticky Note2"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "606b895b-50bb-4bc7-b3f8-86ea46afc450",
+  "meta": {
+    "instanceId": "115e390902a9688868052192407aa9ae130fbf662385cd2ab51971daa45a5014"
+  },
+  "id": "yhYIyZtFdo6WsYpa",
+  "tags": []
+}

@@ -1,0 +1,150 @@
+{
+  "name": "On Form submission - Sentiment analysis",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Review System",
+        "formDescription": "Provide feedbak",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Service",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Good"
+                  },
+                  {
+                    "option": "Bad"
+                  },
+                  {
+                    "option": "Ugly"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        -272,
+        -160
+      ],
+      "id": "be81b766-a71a-464c-ac36-2ea98c7634a8",
+      "name": "On form submission",
+      "webhookId": "d95535de-12ea-43ff-9288-c522861bbb50"
+    },
+    {
+      "parameters": {
+        "inputText": "={{ $json.Service }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.sentimentAnalysis",
+      "typeVersion": 1.1,
+      "position": [
+        -48,
+        -160
+      ],
+      "id": "db1d4268-9811-4067-adac-6b314220c1ed",
+      "name": "Sentiment Analysis"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        24,
+        96
+      ],
+      "id": "0d237518-c0e5-4a7c-b5b5-b45ae3683af2",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "ReBbz3Dj85A9IIOr",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "vijayanandak17@gmail.com",
+        "subject": "hi",
+        "message": "={{ $json.Service }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        368,
+        -176
+      ],
+      "id": "d74a2ba5-265b-4636-a4f8-cb093ab3b2bc",
+      "name": "Send a message",
+      "webhookId": "1cb6cff4-1014-4940-ab14-fb7619c1b49a",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "s0YH16SM3pt2D6uZ",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Sentiment Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Sentiment Analysis",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sentiment Analysis": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "fdbed18f-ab14-4615-9729-b38b6e734e7f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "115e390902a9688868052192407aa9ae130fbf662385cd2ab51971daa45a5014"
+  },
+  "id": "I1vN45JUbWR10pbs",
+  "tags": []
+}

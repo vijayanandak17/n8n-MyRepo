@@ -1,0 +1,107 @@
+{
+  "name": "MyFirstWorkflow - Greeting",
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6e1b9855-4540-4bd7-970c-e4d7a5b00207",
+              "name": "Greeting",
+              "value": "=Hello {{ $json.Name }}. Welcome {{ $json.Name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        48,
+        -96
+      ],
+      "id": "f01fbaab-d199-4cd4-a2c2-f85e207e8dcd",
+      "name": "Greeting Message"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3e9a7328-87d6-4e9f-bff6-069e4bb598b2",
+              "name": "Name",
+              "value": "Vijay",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -176,
+        -96
+      ],
+      "id": "860e3e31-73f4-4df6-97aa-ef3edc556e10",
+      "name": "Getting Name"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 1
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -448,
+        -96
+      ],
+      "id": "59d92ef5-173b-4337-9560-e7b69decc1c8",
+      "name": "Schedule Trigger"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Getting Name": {
+      "main": [
+        [
+          {
+            "node": "Greeting Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Getting Name",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "1c0d8f82-6a06-43fa-996a-2612091d0491",
+  "meta": {
+    "instanceId": "356c662d17923f9820d7115a006658582fab18aec193328bd2c8e8f9a8aa3751"
+  },
+  "id": "UUnPaIiVDfCqXfog",
+  "tags": []
+}

@@ -1,0 +1,175 @@
+{
+  "name": "Basic Telegram Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -656,
+        -160
+      ],
+      "id": "f7b61290-336d-4370-8966-7e0b5609243f",
+      "name": "Telegram Trigger",
+      "webhookId": "1d3ee90a-69fd-415f-89a9-028a0848fd34",
+      "credentials": {
+        "telegramApi": {
+          "id": "k7B9H3YvdGZKkuDR",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Reply to user requested query {{ $json.message.text }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "You are a skilled assistant"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        -448,
+        -160
+      ],
+      "id": "3355cb3f-864b-4b25-a4b6-4aefb69d2ba8",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -512,
+        48
+      ],
+      "id": "6a6f8170-7656-4ba9-b553-de62dc7f164b",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "ReBbz3Dj85A9IIOr",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.text }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -96,
+        -160
+      ],
+      "id": "39b86f56-f011-4f55-b688-bbaa1dbc72fa",
+      "name": "My Response Assistant",
+      "webhookId": "4a63ad29-d0c8-48e1-b0f9-b53aa54fd96d",
+      "credentials": {
+        "telegramApi": {
+          "id": "k7B9H3YvdGZKkuDR",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Response Assistant",
+        "height": 224,
+        "width": 256,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -176,
+        -224
+      ],
+      "typeVersion": 1,
+      "id": "42967150-377e-45f9-93dd-cfa044fc04d6",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Telegram Chat",
+        "height": 208
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -768,
+        -208
+      ],
+      "typeVersion": 1,
+      "id": "5f2f4a0c-01e3-410c-ac38-3fa225a5399e",
+      "name": "Sticky Note1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "My Response Assistant",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "00c220c5-7f2a-4ff8-b716-cc2bfa5c60f7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "115e390902a9688868052192407aa9ae130fbf662385cd2ab51971daa45a5014"
+  },
+  "id": "rkZnROASjakaEkig",
+  "tags": []
+}

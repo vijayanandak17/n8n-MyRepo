@@ -1,0 +1,634 @@
+{
+  "name": "AI Nodes - LLM, Info Extractor,Q&A chain",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1696,
+        224
+      ],
+      "id": "1e6ab913-9e27-40f8-854a-7a16439f8c53",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "You are an intelligent assistant to generate a motivational quote.\n\nCall Gmail and pass this quote as body of content. Subject: Motivational quote of the Day ! Sent to: vijayanandak17@gmail.com"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.7
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -1472,
+        224
+      ],
+      "id": "1cbba25c-2251-43df-8592-ab9ae2fe75ce",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "FwgZAEfjSGWsRgu5",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Give a 3 line story for the quote {{ $json.message.content }}",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "You are an expert in quotes explanation in simple english.  Keep the  quote in BOLD format in response.  Move two new lines below and give the story"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        -1120,
+        224
+      ],
+      "id": "89921862-aa2f-426d-ab5e-ecde4fff22c4",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        -1392,
+        448
+      ],
+      "id": "16e55c12-8686-4388-b4fd-2259e4beee96",
+      "name": "Send a message in Gmail",
+      "webhookId": "c06f9c36-e959-4f0e-8d41-e90b81530f49",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "V167WywE5JQ6Gf7B",
+          "name": "Gmail account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1040,
+        448
+      ],
+      "id": "8840ba30-1abe-42a3-861d-991c99acaa6c",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "FwgZAEfjSGWsRgu5",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Give me 3 line story for the  motivational quote",
+        "height": 240,
+        "width": 320,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1152,
+        144
+      ],
+      "typeVersion": 1,
+      "id": "7032249a-d98d-4256-b867-caf9b37c56da",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Send email 1 - full sentence",
+        "height": 240,
+        "width": 304,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -512,
+        144
+      ],
+      "typeVersion": 1,
+      "id": "9afc0106-5284-4133-a799-109a0e983615",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.text }}",
+        "attributes": {
+          "attributes": [
+            {
+              "name": "Motivation ",
+              "description": "Motivational words only seperated by commas",
+              "required": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1.2,
+      "position": [
+        -768,
+        224
+      ],
+      "id": "9568682e-d756-4ad7-8bed-8a958ca6a670",
+      "name": "Information Extractor"
+    },
+    {
+      "parameters": {
+        "sendTo": "vijayanandak17@gmail.com",
+        "subject": "Quote & Short story ",
+        "message": "={{ $json.output['Motivation '] }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -416,
+        224
+      ],
+      "id": "2079b4b1-8128-4da1-a668-6e8eab88eac2",
+      "name": "Send a message",
+      "webhookId": "32716b5f-e263-4005-9518-95db94098d06",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "V167WywE5JQ6Gf7B",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -688,
+        448
+      ],
+      "id": "d763e316-7540-454f-9f85-e2b34ac31c5e",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "FwgZAEfjSGWsRgu5",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "text": "={{ $('Information Extractor').item.json.output['Motivation '] }}",
+        "schemaType": "fromJson",
+        "jsonSchemaExample": "{\n\t\"Word\": [\"Courage\", \"Trust\", \"Faith\"]\n}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1.2,
+      "position": [
+        -176,
+        224
+      ],
+      "id": "009f9bdf-d9d9-4096-9d6c-f678c533e24e",
+      "name": "Information Extractor1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -112,
+        448
+      ],
+      "id": "58524aa2-f9ae-47d7-a94c-f4d81830ef17",
+      "name": "OpenAI Chat Model2",
+      "credentials": {
+        "openAiApi": {
+          "id": "FwgZAEfjSGWsRgu5",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Give a synonym for each word {{ $json.output.Word }}",
+        "options": {
+          "systemPromptTemplate": "You are an assistant for question-answering tasks. Use the following pieces of retrieved context to answer the question.\nIf you don't know the answer, just say that you don't know, don't try to make up an answer.\n----------------\nContext: {context}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainRetrievalQa",
+      "typeVersion": 1.6,
+      "position": [
+        192,
+        224
+      ],
+      "id": "b9b07183-ca0f-4a45-ac24-5de12653b773",
+      "name": "Question and Answer Chain"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        160,
+        448
+      ],
+      "id": "f7642c06-f672-4380-a46b-f25809258da2",
+      "name": "OpenAI Chat Model3",
+      "credentials": {
+        "openAiApi": {
+          "id": "FwgZAEfjSGWsRgu5",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.retrieverVectorStore",
+      "typeVersion": 1,
+      "position": [
+        288,
+        448
+      ],
+      "id": "6bf88a55-6b12-44bf-af45-2407c746d0c8",
+      "name": "Vector Store Retriever"
+    },
+    {
+      "parameters": {
+        "memoryKey": {
+          "__rl": true,
+          "value": "vector_store_key",
+          "mode": "list",
+          "cachedResultName": "vector_store_key"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "typeVersion": 1.3,
+      "position": [
+        288,
+        656
+      ],
+      "id": "ec13473b-d741-4e75-92f2-727f6fa6ff6b",
+      "name": "Simple Vector Store"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        368,
+        864
+      ],
+      "id": "83b00a56-081c-4e3f-9e64-dfb5496d233d",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "FwgZAEfjSGWsRgu5",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Extract motivation sentences seperately",
+        "height": 240,
+        "width": 288,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -816,
+        144
+      ],
+      "typeVersion": 1,
+      "id": "57c7a7d8-6e61-4aaf-80c3-b7e9465a5c25",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "sendTo": "vijayanandak17@gmail.com",
+        "subject": "Synonyms for today's Motivation",
+        "message": "={{ $json.response }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        736,
+        224
+      ],
+      "id": "f423ffd0-3dab-4bab-ad24-1a89fdd3ef85",
+      "name": "Send a message1",
+      "webhookId": "f36cad4a-1709-443d-8738-a05e85d9a8c8",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "V167WywE5JQ6Gf7B",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Give me a motivational quote",
+        "height": 240,
+        "width": 320,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1504,
+        144
+      ],
+      "typeVersion": 1,
+      "id": "2e5aec9d-2e95-4d0c-a5fa-1a65675bc1ae",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Extract Motivation words",
+        "height": 240,
+        "width": 256
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -192,
+        144
+      ],
+      "typeVersion": 1,
+      "id": "96833163-545d-4cc9-8329-61e4c9ca2f09",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## Get a Synonym \n(similar meaning word) for each motivation word",
+        "height": 912,
+        "width": 528
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        80,
+        96
+      ],
+      "typeVersion": 1,
+      "id": "b9cccfdf-cc52-415d-b0e3-f5ceb514becc",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "## Send email - send Synonym",
+        "height": 240,
+        "width": 304,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        640,
+        144
+      ],
+      "typeVersion": 1,
+      "id": "34a8a8da-ea9b-4158-bba7-8bbca35303a6",
+      "name": "Sticky Note6"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "Message a model",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Information Extractor": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Information Extractor1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Information Extractor1": {
+      "main": [
+        [
+          {
+            "node": "Question and Answer Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Question and Answer Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vector Store Retriever": {
+      "ai_retriever": [
+        [
+          {
+            "node": "Question and Answer Chain",
+            "type": "ai_retriever",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Vector Store": {
+      "ai_vectorStore": [
+        [
+          {
+            "node": "Vector Store Retriever",
+            "type": "ai_vectorStore",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Simple Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Question and Answer Chain": {
+      "main": [
+        [
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "4cc965e5-baa9-4a81-b3f5-81241aee7d02",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "356c662d17923f9820d7115a006658582fab18aec193328bd2c8e8f9a8aa3751"
+  },
+  "id": "0Uk0ZsiHHSWY7YzU",
+  "tags": []
+}

@@ -1,0 +1,229 @@
+{
+  "name": "Google Nodes",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -592,
+        -80
+      ],
+      "id": "3dfe6f94-b138-4c50-b3a6-5c568428b0a9",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "sendTo": "vijayanandak17@gmail.com",
+        "subject": "Testing GoogleOAuth2",
+        "emailType": "text",
+        "message": "Looks like it finally works!",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -368,
+        -80
+      ],
+      "id": "2ae51b1b-4d4d-415c-9fe9-f72e4c67d88d",
+      "name": "Send a message",
+      "webhookId": "bfca2b63-ad01-41ed-82e3-d47a5f5bbc5e",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "V167WywE5JQ6Gf7B",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "N8nGoogleOAuthTest",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "root",
+          "cachedResultName": "/ (Root folder)"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -144,
+        -80
+      ],
+      "id": "47364de8-1471-43f1-be3d-9c315823d01f",
+      "name": "Create folder",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "KJTF4Ukk7EhQyGWh",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "folderId": "1Toq8YU2ObdeqzzYYF8sEUhl46F6aHuig",
+        "title": "MyNewn8nGOuth2.doc"
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        80,
+        -80
+      ],
+      "id": "654959d2-af33-4aee-9308-7a59f54c2d46",
+      "name": "Create a document",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "uLJ6rhYxnlzYSXEV",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "spreadsheet",
+        "title": "=My n8n GOuth2 sheet",
+        "sheetsUi": {
+          "sheetValues": [
+            {
+              "title": "={{ new Date().toLocaleDateString('en-GB', { timeZone: 'Asia/Kolkata' }).replace(/\\//g, '-') }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        304,
+        -80
+      ],
+      "id": "7fb75fa1-0aba-4022-9f5e-f9c0420a07ef",
+      "name": "Create spreadsheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "6cqK3rhIm29eqP6d",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "vijayanandak17@gmail.com",
+          "mode": "list",
+          "cachedResultName": "vijayanandak17@gmail.com"
+        },
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        528,
+        -80
+      ],
+      "id": "1c8e8c0e-7304-4e86-bedc-a861f9a0471e",
+      "name": "Create an event",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "Lw3WAnfIssljLAB7",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Google Nodes Exercise\n",
+        "height": 320,
+        "width": 1392
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -656,
+        -176
+      ],
+      "typeVersion": 1,
+      "id": "b86b533c-c355-4acf-b9c7-72f6c57ba261",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Create folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create folder": {
+      "main": [
+        [
+          {
+            "node": "Create a document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a document": {
+      "main": [
+        [
+          {
+            "node": "Create spreadsheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create spreadsheet": {
+      "main": [
+        [
+          {
+            "node": "Create an event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "b1a832e2-a4d8-4677-9a91-cd4f1a2a12f3",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "356c662d17923f9820d7115a006658582fab18aec193328bd2c8e8f9a8aa3751"
+  },
+  "id": "fNQEm4sI82k7T9UP",
+  "tags": []
+}

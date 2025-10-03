@@ -1,0 +1,170 @@
+{
+  "name": "GMAIL Responder",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -400,
+        -64
+      ],
+      "id": "763eddcd-432f-4169-90a4-b7fd095133dc",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "s0YH16SM3pt2D6uZ",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Write a reply email for the below:\nTo: {{ $json.From }}\nSubject: {{ $json.Subject }}\nContent: {{ $json.snippet }}"
+            },
+            {
+              "content": "You are an expert in writing professional email\nWrite only Body message. No subject required\n\nDraft email in a good format:\nEmail must start with a greeting\nNew line messages \nFooter\n\nAdd this footer in all emails\n\nRegards\nvijayanand A K",
+              "role": "system"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -176,
+        -64
+      ],
+      "id": "3a2847bd-1481-476d-964e-fc7101231ef9",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "ReBbz3Dj85A9IIOr",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "reply",
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}",
+        "message": "={{ $json.message.content }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        176,
+        -64
+      ],
+      "id": "bc15a3ca-23ca-4a04-a9c6-a5afdd667789",
+      "name": "Reply to a message",
+      "webhookId": "8d3d77d0-442d-4863-adca-7aa4c2ba500a",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "s0YH16SM3pt2D6uZ",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Gmail Trigger for Listening",
+        "height": 256
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -496,
+        -144
+      ],
+      "typeVersion": 1,
+      "id": "88f2d2d1-3ba9-498f-877b-c25e3d2835ee",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Define System and User Prompt",
+        "height": 256,
+        "width": 336,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -224,
+        -144
+      ],
+      "typeVersion": 1,
+      "id": "3b596df0-0ac3-4483-87a0-52ecf769253f",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Gmail REPLY to MESSAGE",
+        "height": 256,
+        "width": 272
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        144,
+        -144
+      ],
+      "typeVersion": 1,
+      "id": "d3ff8f25-4615-48e6-befa-2452a03fa536",
+      "name": "Sticky Note2"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Reply to a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "5983369b-5dc9-4a4a-b668-56f442576b01",
+  "meta": {
+    "instanceId": "115e390902a9688868052192407aa9ae130fbf662385cd2ab51971daa45a5014"
+  },
+  "id": "BqtFEAr69wQLjEVi",
+  "tags": []
+}
