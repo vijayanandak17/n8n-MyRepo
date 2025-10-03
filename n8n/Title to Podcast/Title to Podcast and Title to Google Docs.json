@@ -1,0 +1,304 @@
+{
+  "name": "Title to Podcast and Title to Google Docs",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -528,
+        -288
+      ],
+      "id": "25607e8a-d3bd-41bb-a67e-ccbbc52967a9",
+      "name": "Telegram Trigger",
+      "webhookId": "fdf9fd1b-76bf-428e-9890-faf2da6aa116",
+      "credentials": {
+        "telegramApi": {
+          "id": "k7B9H3YvdGZKkuDR",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -240,
+        -64
+      ],
+      "id": "c22c33f8-58b2-49b1-8902-1a2eaff8b63e",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "ReBbz3Dj85A9IIOr",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "input": "={{ $json.text }}",
+        "voice": "fable",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        48,
+        -288
+      ],
+      "id": "0fd50347-3af9-4240-9165-2fdf924c3cd6",
+      "name": "Generate audio",
+      "credentials": {
+        "openAiApi": {
+          "id": "ReBbz3Dj85A9IIOr",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        304,
+        -64
+      ],
+      "id": "bbd48385-81a9-4340-b302-a1303dcfb46b",
+      "name": "Telegram Trigger1",
+      "webhookId": "fdf9fd1b-76bf-428e-9890-faf2da6aa116",
+      "credentials": {
+        "telegramApi": {
+          "id": "k7B9H3YvdGZKkuDR",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Write a story for the title {{ $json.message.text }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "You are a script writer and able to generate a script for 60 seconds with twists and turns. I am planning to post this on social media and hence add authority in the scripts. Tone is bold and story telling."
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        528,
+        -64
+      ],
+      "id": "b51443ca-ac66-4d80-a380-ea259c2d4dc6",
+      "name": "Basic LLM Chain1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        592,
+        160
+      ],
+      "id": "230b144c-dc8d-40b4-8686-5f2ad4bfed44",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "ReBbz3Dj85A9IIOr",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "https://docs.google.com/document/d/1OIXJeo-lGArKitbU7UDzh7s1Dxh4joVmGrgM3ypqiIE/edit?usp=drive_link",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "insert",
+              "text": "={{ $json.text }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        864,
+        -64
+      ],
+      "id": "e6c03928-c4e9-4daf-933d-10f243170712",
+      "name": "Update a document",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "x8E2cmmKfmPuBEnI",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Title to Google Docs\n**We are getting a story generated from Title and converted to Google Docs****",
+        "height": 448,
+        "width": 912
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        224,
+        -160
+      ],
+      "typeVersion": 1,
+      "id": "0e246f77-46df-4e07-a6c4-8db9f84c8bee",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Title to Podcast\n**We are getting a story generated from Title and converted to AUDIO**",
+        "height": 480,
+        "width": 896,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -640,
+        -400
+      ],
+      "typeVersion": 1,
+      "id": "11eff355-0444-48a0-9d81-7e27517e9c21",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Write a story for the title {{ $json.message.text }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "You are a script writer and able to generate a script for 60 seconds with twists and turns. I am planning to post this on social media and hence add authority in the scripts. Tone is bold and story telling."
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        -304,
+        -288
+      ],
+      "id": "9576ff40-93b3-4d28-be24-71a805830cfc",
+      "name": "Basic LLM Chain"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger1": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain1": {
+      "main": [
+        [
+          {
+            "node": "Update a document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Generate audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "792429a0-6a51-4d3d-a003-9cd2227e8124",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "115e390902a9688868052192407aa9ae130fbf662385cd2ab51971daa45a5014"
+  },
+  "id": "xRi2O1GlCgMNiEEE",
+  "tags": []
+}
